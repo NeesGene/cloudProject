@@ -6,7 +6,7 @@ services:
     build: .
     restart: always
     labels:
-      caddy: "jouw-domein.duckdns.org"
+      caddy: "genenees.duckdns.org"
       caddy.reverse_proxy: "{{upstreams 3000}}"
     networks:
       - caddy_net
