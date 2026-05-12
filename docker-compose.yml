@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  # Je SSR Web-app
+  webapp:
+    build: .
+    restart: always
+    labels:
+      caddy: "jouw-domein.duckdns.org"
+      caddy.reverse_proxy: "{{upstreams 3000}}"
+    networks:
+      - caddy_net
+
+  # De Caddy Reverse Proxy
+  caddy:
+    image: lucaslorentz/caddy-docker-proxy:latest
+    restart: always
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - caddy_data:/data
+    networks:
+      - caddy_net
+
+networks:
+  caddy_net:
+
+volumes:
+  caddy_data:
