@@ -1,0 +1,86 @@
+name: Hetzner Ephemeral Runner Deployment with Caddy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  # PHASE 1: Spin up the ephemeral runner
+  start-runner:
+    runs-on: ubuntu-latest
+    outputs:
+      label: ${{ steps.start-hcloud-runner.outputs.label }}
+    steps:
+      - name: Create Hetzner Cloud Server
+        id: start-hcloud-runner
+        uses: cyclenerd/self-hosted-github-actions-runner-on-hetzner-cloud@v1.4.0
+        with:
+          mode: start
+          github_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          hcloud_token: ${{ secrets.HCLOUD_TOKEN }}
+          server_type: cx22
+
+  # PHASE 2: Run build tasks safely inside the fresh runner
+  build-and-deploy:
+    needs: start-runner
+    runs-on: ${{ needs.start-runner.outputs.label }}
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # Log into GitHub Packages Registry securely
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }} # Built into GitHub automatically
+
+      # Build your Dockerfile inside the fresh machine and push it to GHCR
+      - name: Build and Push Webapp Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          # Make sure to replace these with your actual lowercase github handle and repo name
+          tags: ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      # SSH into your live production server to tell Caddy to update
+      - name: Update Live Hetzner Server
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
+          script: |
+            cd ~/cloudProject
+            
+            # Pull the updated docker-compose file you modified in Step 1
+            git pull origin main
+            
+            # Force Docker to download the fresh image from GitHub's registry
+            docker compose pull webapp
+            
+            # Seamlessly swap the running container. Caddy will detect the change automatically!
+            docker compose up -d --remove-orphans
+
+  # PHASE 3: Kill the temporary runner so you aren't billed for it
+  stop-runner:
+    runs-on: ubuntu-latest
+    needs: [start-runner, build-and-deploy]
+    if: always()
+    steps:
+      - name: Destroy Hetzner Cloud Server
+        uses: cyclenerd/self-hosted-github-actions-runner-on-hetzner-cloud@v1.4.0
+        with:
+          mode: stop
+          github_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          hcloud_token: ${{ secrets.HCLOUD_TOKEN }}
+          label: ${{ needs.start-runner.outputs.label }}
