@@ -14,7 +14,7 @@ jobs:
     steps:
       - name: Create Hetzner Cloud Server
         id: start-hcloud-runner
-        uses: cyclenerd/self-hosted-github-actions-runner-on-hetzner-cloud@v1.4.0
+        uses: Cyclenerd/self-hosted-github-actions-runner-on-hetzner-cloud@v1.4.0
         with:
           mode: start
           github_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
@@ -38,7 +38,7 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }} # Built into GitHub automatically
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       # Build your Dockerfile inside the fresh machine and push it to GHCR
       - name: Build and Push Webapp Image
@@ -46,8 +46,7 @@ jobs:
         with:
           context: .
           push: true
-          # Make sure to replace these with your actual lowercase github handle and repo name
-          tags: ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}:latest
+          tags: ghcr.io/neesgene/cloudproject:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -61,14 +60,8 @@ jobs:
           port: 22
           script: |
             cd ~/cloudProject
-            
-            # Pull the updated docker-compose file you modified in Step 1
             git pull origin main
-            
-            # Force Docker to download the fresh image from GitHub's registry
             docker compose pull webapp
-            
-            # Seamlessly swap the running container. Caddy will detect the change automatically!
             docker compose up -d --remove-orphans
 
   # PHASE 3: Kill the temporary runner so you aren't billed for it
@@ -78,7 +71,7 @@ jobs:
     if: always()
     steps:
       - name: Destroy Hetzner Cloud Server
-        uses: cyclenerd/self-hosted-github-actions-runner-on-hetzner-cloud@v1.4.0
+        uses: Cyclenerd/self-hosted-github-actions-runner-on-hetzner-cloud@v1.4.0
         with:
           mode: stop
           github_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
