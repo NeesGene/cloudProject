@@ -17,6 +17,8 @@ jobs:
         uses: cyclenerd/cloud-tools-container@55af8e082599558df9192443081f444fd82815b2
         with:
           args: start --mode=auto --github-token=${{ secrets.PERSONAL_ACCESS_TOKEN }} --hcloud-token=${{ secrets.HCLOUD_TOKEN }} --server-type=cx22
+        env:
+          ENTRYPOINT: /cloud-tools-container
 
   # PHASE 2: Run build tasks safely inside the fresh runner
   build-and-deploy:
@@ -103,3 +105,5 @@ jobs:
         uses: cyclenerd/cloud-tools-container@55af8e082599558df9192443081f444fd82815b2
         with:
           args: stop --label=${{ needs.start-runner.outputs.label }} --github-token=${{ secrets.PERSONAL_ACCESS_TOKEN }} --hcloud-token=${{ secrets.HCLOUD_TOKEN }}
+        env:
+          ENTRYPOINT: /cloud-tools-container
