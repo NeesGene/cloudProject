@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= hero.name %> - Rivals Track</title>
+    <%- include('partials/bootstrap') %>
+    <link rel="stylesheet" href="/css/heroDetail.css" />
+</head>
+<body>
+    <%- include('partials/navbar') %>
+
+    <main class="container mt-5">
+        <%
+            const mainImg = hero.costumes?.[0]?.icon ? `${SKIN_BASE}${hero.costumes[0].icon}` : (hero.imageUrl ? `${IMG_BASE}${hero.imageUrl}` : null);
+            const hp = hero.transformations?.[0]?.health || "—";
+            const abilities = Array.isArray(hero.abilities) ? hero.abilities : [];
+            const heroDisplayName = hero.real_name || hero.name;
+            const cleanAbilityDescription = (description = "") => String(description)
+                .replace(/\{104700\}/g, heroDisplayName)
+                .replace(/\{\d+\}/g, "")
+                .replace(/<\/?[^>]+>/g, "")
+                .trim();
+        %>
+
+        <section class="hero-detail-main d-flex flex-wrap gap-4">
+            <div class="hero-text-content flex-grow-1">
+                <h1 class="display-4"><%= hero.real_name || hero.name %></h1>
+
+                <div class="stats-list my-3">
+                    <p><strong>HP:</strong> <%= hp %></p>
+                    <p><strong>Rol:</strong> <%= hero.role || "—" %></p>
+                    <% if (hero.attack_type) { %>
+                        <p><strong>Aanvalstype:</strong> <%= hero.attack_type %></p>
+                    <% } %>
+                    <% if (hero.difficulty) { %>
+                        <p><strong>Moeilijkheid:</strong> <%= hero.difficulty %>/5</p>
+                    <% } %>
+                </div>
+
+                <p class="hero-description lead">
+                    <%= hero.bio || hero.lore || "Geen beschrijving beschikbaar." %>
+                </p>
+            </div>
+
+            <div class="hero-large-image">
+                <% if (mainImg) { %>
+                    <img src="<%= mainImg %>" alt="<%= hero.name %>" class="img-fluid rounded shadow">
+                <% } %>
+            </div>
+        </section>
+
+        <hr class="my-5">
+
+        <section class="hero-abilities">
+            <h2 class="mb-4">Vaardigheden</h2>
+
+            <% if (abilities.length > 0) { %>
+                <div class="abilities-grid">
+                    <% abilities.forEach(ability => {
+                        const abilityImg = ability.icon ? `${IMG_BASE}${ability.icon}` : "";
+                    %>
+                        <article class="ability-card">
+                            <% if (abilityImg) { %>
+                                <img src="<%= abilityImg %>" alt="<%= ability.name %>" class="ability-icon" onerror="this.style.display='none'">
+                            <% } %>
+
+                            <div class="ability-info">
+                                <div class="ability-heading">
+                                    <h3><%= ability.name %></h3>
+                                    <% if (ability.type) { %>
+                                        <span><%= ability.type %></span>
+                                    <% } %>
+                                </div>
+
+                                <p><%= cleanAbilityDescription(ability.description) || "Geen beschrijving beschikbaar." %></p>
+
+                                <% if (ability.isCollab) { %>
+                                    <p class="ability-team-up">Team-Up Vaardigheid</p>
+                                <% } %>
+                            </div>
+                        </article>
+                    <% }) %>
+                </div>
+            <% } else { %>
+                <p class="text-muted">Geen vaardigheden beschikbaar.</p>
+            <% } %>
+        </section>
+
+        <hr class="my-5">
+
+        <section class="andere-helden">
+            <h2 class="mb-4 UHTitle">Andere Helden</h2>
+            <div class="hero-grid-mini d-flex gap-3 flex-wrap">
+                <% otherHeroes.forEach(other => {
+                    const otherImg = other.costumes?.[0]?.icon ? `${SKIN_BASE}${other.costumes[0].icon}` : (other.imageUrl ? `${IMG_BASE}${other.imageUrl}` : "");
+                %>
+                    <article class="mini-card p-2 border rounded" style="cursor:pointer;"
+                             onclick="location.href='/heroes/<%= other.id %>'">
+                        <img src="<%= otherImg %>" alt="<%= other.name %>" class="mini-img img-fluid mb-2" onerror="this.style.display='none'">
+                        <div class="mini-info">
+                            <h5><%= other.name %></h5>
+                            <p class="small text-muted mb-0"><%= other.role %></p>
+                        </div>
+                    </article>
+                <% }) %>
+            </div>
+        </section>
+    </main>
+    <%- include('partials/footer') %>
+</body>
+</html>

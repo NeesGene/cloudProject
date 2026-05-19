@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Marvel Rivals Track - Helden</title>
+    <%- include('partials/bootstrap') %>
+    <link rel="stylesheet" href="./css/heroes.css" />
+</head>
+<body>
+    
+    <%- include('partials/navbar') %>
+
+    <main>
+        <div class="container">
+            <div class="filter-section">
+                <form action="/heroes" method="GET">
+                    <select name="sort" class="sort-dropdown" onchange="this.form.submit()">
+                        <option value="" <%= !selectedSort ? 'selected' : '' %>>Sorteren op</option>
+                        <option value="HP" <%= selectedSort === 'HP' ? 'selected' : '' %>>HP</option>
+                        <option value="name" <%= selectedSort === 'name' ? 'selected' : '' %>>Naam</option>
+                    </select>
+                </form>
+            </div>
+
+            <section class="hero-grid">
+                <% if (heroes && heroes.length > 0) { %>
+                    <% heroes.forEach(hero => { 
+                        // Old logic:
+                        // const img = hero.costumes?.[0]?.icon ? `${SKIN_BASE}${hero.costumes[0].icon}` : (hero.imageUrl ? `${IMG_BASE}${hero.imageUrl}` : "");
+                        
+                        // New logic: Point to our proxy route
+                        const img = `/hero-image/${hero.id}`;
+                        
+                        const name = hero.name || hero.real_name || "Unknown";
+                        const hp = hero.transformations?.[0]?.health;
+                        const isFavorite = favoriteHeroes && favoriteHeroes.has(String(hero.id));
+                    %>
+                        <article class="hero-card <%= isFavorite ? 'hero-card-favorite' : '' %>" onclick="location.href='/heroes/<%= hero.id %>'">
+                            <form class="favorite-form" action="/heroes/<%= hero.id %>/favorite" method="POST" onclick="event.stopPropagation();">
+                                <input type="hidden" name="favorite" value="<%= isFavorite ? 'false' : 'true' %>">
+                                <input type="hidden" name="sort" value="<%= selectedSort || '' %>">
+                                <input type="hidden" name="search" value="<%= selectedSearch || '' %>">
+                                <button
+                                    type="submit"
+                                    class="favorite-button <%= isFavorite ? 'is-favorite' : '' %>"
+                                    title="<%= isFavorite ? 'Verwijder favoriet' : 'Voeg toe aan favorieten' %>"
+                                    aria-label="<%= isFavorite ? 'Verwijder favoriet' : 'Voeg toe aan favorieten' %>"
+                                >
+                                    ★
+                                </button>
+                            </form>
+                            <% if (img) { %>
+                                <img src="<%= img %>" alt="<%= name %>" class="hero-image" onerror="this.src='/img/placeholder.png'">
+                            <% } else { %>
+                                <div class="hero-image-placeholder"></div>
+                            <% } %>
+                            
+                            <div class="hero-info">
+                                <h3><%= name %></h3>
+                                <% if (hp) { %><p>HP: <%= hp %></p><% } %>
+                                <% if (hero.role) { %>
+                                    <p class="hero-role"><%= hero.role %></p>
+                                <% } %>
+                            </div>
+                        </article>
+                    <% }) %>
+                <% } else { %>
+                    <p style="color: white; padding: 20px;">Geen helden gevonden.</p>
+                <% } %>
+            </section>
+        </div>
+    </main>
+    <%- include('partials/footer') %>
+</body>
+</html>

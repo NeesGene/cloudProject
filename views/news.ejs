@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Marvel Rivals Track - Nieuws</title>
+    <%- include('partials/bootstrap') %>
+    <link rel="stylesheet" href="/css/news.css" />
+</head>
+<body>
+    <%- include('partials/navbar') %>
+
+    <main class="container my-5">
+    <header class="news-header mb-5">
+        <h1 class="display-4 text-yellow">Spel Nieuws</h1>
+    </header>
+
+    <section class="events-section mb-5">
+    <h2 class="h2 border-bottom pb-2">Huidige Events</h2>
+    <div class="events-grid">
+        <% if (events && events.length > 0) { %>
+            <% events.forEach(event => { %>
+                <% }) %>
+        <% } else { %>
+            <div class="p-4 border rounded text-center bg-dark-soft">
+                <p class="text-muted mb-0 italic">Er zijn momenteel geen actieve events. Check later weer!</p>
+            </div>
+        <% } %>
+    </div>
+</section>
+
+    <section class="news-section">
+        <h2 class="h2 border-bottom pb-2">Updates & Patch Notes</h2>
+        <div class="news-grid d-flex flex-column gap-4 mt-4" id="patches-grid">
+            <% if (patches.length > 0) { %>
+                <% patches.forEach(p => { %>
+                    <article class="news-card p-4 rounded shadow-lg bg-dark-soft">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <h3 class="text-yellow"><%= p.title || p.name || "Update" %></h3>
+                            <span class="badge bg-secondary"><%= p.date %></span>
+                        </div>
+                        <p class="mt-2 text-light-gray"><%= p.overview || p.description || "" %></p>
+                        <a href="#" class="link-yellow">Bekijk volledige details →</a>
+                    </article>
+                <% }) %>
+            <% } else { %>
+                <p class="text-muted italic">Geen recente patch notes gevonden.</p>
+            <% } %>
+        </div>
+    </section>
+</main>
+<%- include('partials/footer') %>
+</body>
+</html>

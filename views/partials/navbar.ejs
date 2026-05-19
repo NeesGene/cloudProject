@@ -1,0 +1,40 @@
+
+<header>
+    <nav class="navbar">
+    <a href="/" class="nav-logo">Rivals Track</a>
+
+    <div class="nav-links">
+        <a href="/heroes" class="<%= currentPage === 'heroes' ? 'nav-active' : '' %>">Helden</a>
+        <a href="/stats" class="<%= currentPage === 'stats' ? 'nav-active' : '' %>">Statistieken</a>
+        <a href="/news" class="<%= currentPage === 'news' ? 'nav-active' : '' %>">Nieuws</a>
+
+        <form class="nav-search" action="/heroes" method="GET">
+            <input type="text" name="search" class="nav-search-input" placeholder="Helden zoeken..." value="<%= locals.selectedSearch || '' %>" autocomplete="off">
+            <button type="submit" class="nav-search-btn" aria-label="Zoeken">
+                <i class="bi bi-search"></i>
+            </button>
+        </form>
+
+        <% if (locals.user) { %>
+    <div class="dropdown d-flex align-items-center">
+        <button class="btn-yellow login-link dropdown-toggle"
+                type="button"
+                id="userMenu"
+                data-bs-toggle="dropdown"
+                style="min-width: 100px;"> <%= user.username %>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" href="/account/edit">Account Bewerken</a></li>
+            <% if (user.role === 'ADMIN') { %>
+                <li><a class="dropdown-item" href="/admin/accounts">Pas Alle Accounts Aan</a></li>
+            <% } %>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item text-danger" href="/auth/logout">Uitloggen</a></li>
+        </ul>
+    </div>
+<% } else { %>
+    <a href="/login" class="btn-yellow login-link">Inloggen</a>
+<% } %>
+    </div>
+</nav>
+</header>

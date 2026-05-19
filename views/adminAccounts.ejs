@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="nl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rivals Track - Admin Accounts</title>
+    <%- include('partials/bootstrap') %>
+    <link rel="stylesheet" href="/css/account.css" />
+  </head>
+  <body>
+    <%- include('partials/navbar') %>
+
+    <main class="account-page admin-page">
+      <section class="account-panel">
+        <div class="account-heading">
+          <h1>Accounts</h1>
+          <p>Beheer gebruikersprofielen en toegangsrechten.</p>
+        </div>
+
+        <% if (locals.error) { %>
+          <div class="account-alert account-alert-error"><%= error %></div>
+        <% } %>
+
+        <% if (locals.success) { %>
+          <div class="account-alert account-alert-success"><%= success %></div>
+        <% } %>
+
+        <div class="admin-account-list">
+          <% accounts.forEach(account => { %>
+            <article class="admin-account-card">
+              <form class="admin-account-form" action="/admin/accounts/<%= account._id %>" method="POST">
+                <div class="admin-account-topline">
+                  <div>
+                    <h2><%= account.username %></h2>
+                    <p><%= account.email %></p>
+                  </div>
+                  <span class="role-pill <%= account.role === 'ADMIN' ? 'role-pill-admin' : '' %>"><%= account.role %></span>
+                </div>
+
+                <div class="admin-fields">
+                  <div class="input-row">
+                    <label for="username-<%= account._id %>">Gebruikersnaam</label>
+                    <input type="text" id="username-<%= account._id %>" name="username" value="<%= account.username %>" required />
+                  </div>
+
+                  <div class="input-row">
+                    <label for="email-<%= account._id %>">E-mail</label>
+                    <input type="email" id="email-<%= account._id %>" name="email" value="<%= account.email %>" required />
+                  </div>
+
+                  <div class="input-row">
+                    <label for="password-<%= account._id %>">Nieuw Wachtwoord</label>
+                    <input type="password" id="password-<%= account._id %>" name="password" placeholder="Leeg laten om huidig te behouden" />
+                  </div>
+
+                  <div class="input-row">
+                    <label for="role-<%= account._id %>">Rol</label>
+                    <select id="role-<%= account._id %>" name="role">
+                      <option value="USER" <%= account.role === 'USER' ? 'selected' : '' %>>USER</option>
+                      <option value="ADMIN" <%= account.role === 'ADMIN' ? 'selected' : '' %>>ADMIN</option>
+                    </select>
+                  </div>
+                </div>
+
+                <button type="submit" class="account-button">Opslaan</button>
+              </form>
+
+              <form action="/admin/accounts/<%= account._id %>/delete" method="POST" onsubmit="return confirm('Dit account permanent verwijderen?');">
+                <button type="submit" class="account-button danger-button">Verwijder Gebruiker</button>
+              </form>
+            </article>
+          <% }) %>
+        </div>
+      </section>
+    </main>
+    <%- include('partials/footer') %>
+  </body>
+</html>

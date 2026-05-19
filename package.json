@@ -1,11 +1,39 @@
 {
-  "name": "hetzner-ssr-app",
+  "name": "TeamRivals",
   "version": "1.0.0",
-  "main": "server.js",
+  "description": "",
+  "main": "index.ts",
   "scripts": {
-    "start": "node server.js"
+    "test": "jest",
+    "start": "nodemon index.ts"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/ejs": "^3.1.5",
+    "@types/express": "^5.0.6",
+    "@types/express-session": "^1.19.0",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^25.5.0",
+    "@types/supertest": "^7.2.0",
+    "jest": "^30.3.0",
+    "nodemon": "^3.1.14",
+    "supertest": "^7.2.2",
+    "ts-jest": "^29.4.6",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
   },
   "dependencies": {
-    "express": "^4.18.2"
+    "axios": "^1.15.2",
+    "bcryptjs": "^3.0.3",
+    "bootstrap": "^5.3.8",
+    "connect-mongo": "^6.0.0",
+    "dotenv": "^17.3.1",
+    "ejs": "^5.0.2",
+    "express": "^5.2.1",
+    "express-session": "^1.19.0",
+    "mongodb": "^7.2.0",
+    "node-cron": "^4.2.1"
   }
 }

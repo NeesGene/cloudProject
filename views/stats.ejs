@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Statistieken - Rivals Track</title>
+
+    <%- include('partials/bootstrap') %>
+    <link rel="stylesheet" href="/css/statPage.css" />
+
+</head>
+<body>
+    <%- include('partials/navbar') %>
+
+    <main class="container stats-page">
+        <h1>Live Statistieken</h1>
+
+        <div class="stats-grid">
+            <div class="stats-left">
+                <section class="stat-group">
+                    <h2>Spel statistieken</h2>
+                    <div class="centered-placeholder" id="hero-count-stat">
+                        <p class="stat-number"><%= heroCount %></p>
+                        <p class="stat-label">Helden in het raster</p>
+                        <div class="role-breakdown">
+                            <% Object.entries(roles).forEach(([role, count]) => { %>
+                                <span class="role-tag"><%= role %>: <%= count %></span>
+                            <% }) %>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="stat-group search-section">
+                    <h2>Voer een gebruikersnaam in</h2>
+                    <div class="input-row">
+                        <input type="text" id="player-search" placeholder="Zoeken naar speler..." autocomplete="off" />
+                        <button id="search-btn">Zoeken</button>
+                    </div>
+                    <div class="centered-placeholder results-area">
+                    </div>
+                </section>
+            </div>
+
+            <div class="stats-right">
+                <section class="stat-group">
+                    <h2 class="UHTitle">Uitgelichte Helden</h2>
+                    <div class="featured-heroes-row">
+                        <% featured.forEach(hero => {
+                            const img = hero.costumes?.[0]?.icon ? `${SKIN_BASE}${hero.costumes[0].icon}` : (hero.imageUrl ? `${IMG_BASE}${hero.imageUrl}` : "");
+                        %>
+                            <div class="featured-hero" onclick="location.href='/heroes/<%= hero.id %>'">
+                                <% if (img) { %><img src="<%= img %>" alt="<%= hero.name %>"><% } %>
+                                <p><strong><%= hero.name %></strong></p>
+                                <p class="hero-role text-muted"><%= hero.role %></p>
+                            </div>
+                        <% }) %>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+    <%- include('partials/footer') %>
+    <script src="/js/playersearch.js"></script>
+</body>
+</html>

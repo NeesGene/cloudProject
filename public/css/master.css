@@ -1,0 +1,397 @@
+:root {
+  --text: #eae9e1;
+  --background: #13120c;
+  --primary: #bcaa34;
+  --secondary: #4d4823;
+  --accent: #ffef31;
+}
+body {
+  background: #1a1b00;
+  background: linear-gradient(180deg, rgb(20, 21, 0) 0%, rgb(50, 46, 5) 100%);
+  min-height: 100vh;
+  height: fit-content;
+  padding-top: 60px;
+  overflow-x: hidden;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+a,
+pre {
+  text-decoration: none;
+  color: var(--text);
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  background-color: black;
+  height: 60px;
+  padding: 0;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: var(--primary);
+  min-width: max-content;
+  padding: 0 20px;
+  letter-spacing: 1px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.nav-logo:hover {
+  color: var(--primary);
+  text-shadow:
+    0 0 10px var(--primary),
+    0 0 20px var(--primary);
+  transition: text-shadow 0.3s ease-in-out;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #fff;
+  padding: 0 20px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
+.nav-links a:hover {
+  color: #fff;
+  text-shadow:
+    0 0 10px #fff,
+    0 0 20px #fff;
+  transition: text-shadow 0.3s ease-in-out;
+}
+
+.nav-active {
+  color: var(--primary) !important;
+  border-bottom: 2px solid var(--primary);
+}
+
+.btn-yellow {
+  background-color: var(--accent);
+  height: 100%;
+  font-weight: bold;
+  color: #000 !important;
+}
+
+/* Ensure both anchor and button look identical */
+.btn-yellow.login-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    
+    /* Copy your exact dimensions from the Log In button */
+    height: 45px; 
+    padding: 0 20px;
+    
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    font-family: inherit;
+    font-weight: bold;
+    background-color: #ffcc00; /* Your yellow */
+    color: #000;
+    white-space: nowrap;
+}
+
+/* Fix dropdown positioning */
+.dropdown-menu {
+    margin-top: 5px !important;
+}
+/* Style the dropdown container */
+.dropdown-menu {
+    background-color: #4d4823 !important;
+    border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle border */
+    padding: 0.5rem 0;
+}
+
+/* Style the individual links inside the dropdown */
+.dropdown-item {
+    color: #ffffff !important; /* White text looks best on this dark color */
+    padding: 0.7rem 1.5rem;
+    transition: background-color 0.2s;
+}
+
+/* Style the hover state */
+.dropdown-item:hover {
+    background-color: #5d572b !important; /* Slightly lighter version for hover */
+    color: #ffcc00 !important; /* Yellow text on hover to match your buttons */
+}
+
+/* Style the horizontal divider line */
+.dropdown-divider {
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    margin: 0.5rem 0;
+}
+
+/* Ensure the danger/logout text stays red but looks good */
+.dropdown-item.text-danger {
+    color: #ff6b6b !important;
+}
+
+.dropdown-item.text-danger:hover {
+    background-color: #611b1b !important;
+    color: #ffffff !important;
+}
+
+/* Navbar search bar — desktop */
+.nav-search {
+  display: flex;
+  align-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  overflow: hidden;
+  height: 36px;
+  margin: 0 8px;
+  flex: 0 1 220px;
+}
+
+.nav-search-input {
+  flex: 1;
+  min-width: 0;
+  background: rgba(255, 255, 255, 0.05);
+  border: none;
+  padding: 0 10px;
+  color: var(--text);
+  font-size: 0.88rem;
+  height: 100%;
+  outline: none;
+}
+
+.nav-search-input::placeholder {
+  color: rgba(234, 233, 225, 0.38);
+}
+
+.nav-search-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: none;
+  color: var(--text);
+  padding: 0 10px;
+  height: 100%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  font-size: 0.95rem;
+  transition: background-color 0.2s;
+}
+
+.nav-search-btn:hover {
+  background: var(--primary);
+  color: #000;
+}
+
+.UHTitle {
+  text-align: center;
+}
+
+@media (max-width: 760px) {
+  body {
+    padding-top: 160px;
+  }
+
+  .navbar {
+    align-items: center;
+    flex-wrap: wrap;
+    height: auto;
+    min-height: 160px;
+    padding: 10px 12px;
+  }
+
+  .nav-logo {
+    flex: 1 1 100%;
+    justify-content: center;
+    padding: 0 0 8px;
+  }
+
+  .nav-links {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+    width: 100%;
+  }
+
+  .nav-links a,
+  .btn-yellow.login-link {
+    border-radius: 6px;
+    font-size: 0.86rem;
+    height: 40px;
+    justify-content: center;
+    min-width: 0;
+    padding: 0 8px;
+    text-align: center;
+  }
+
+
+
+  .nav-links a {
+    background-color: rgba(255, 255, 255, 0.06);
+  }
+
+  .nav-active {
+    border-bottom: 0;
+    outline: 2px solid var(--primary);
+  }
+
+  .dropdown {
+    min-width: 0;
+  }
+
+  .dropdown .login-link {
+    width: 100%;
+  }
+
+  .dropdown-menu {
+    width: min(240px, calc(100vw - 24px));
+  }
+
+  /* Search bar spans full width as its own row */
+  .nav-search {
+    grid-column: 1 / -1;
+    flex: none;
+    height: 40px;
+    margin: 0;
+    border-radius: 6px;
+  }
+}
+
+@media (max-width: 460px) {
+  body {
+    padding-top: 212px;
+  }
+
+  .navbar {
+    min-height: 212px;
+  }
+
+  .nav-links {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.footer {
+  border-top: 2px solid #000;
+  padding: 40px 20px;
+  max-width: 1000px;
+  margin: 40px auto 0 auto;
+  text-align: center;
+}
+
+.footer p {
+  font-size: 0.9rem;
+  font-weight: bold;
+}
+@media (max-width: 760px) {
+  body {
+    padding-top: 160px;
+  }
+
+  .navbar {
+    align-items: center;
+    flex-wrap: wrap;
+    height: auto;
+    min-height: 160px;
+    padding: 10px 12px;
+  }
+
+  .nav-logo {
+    flex: 1 1 100%;
+    justify-content: center;
+    padding: 0 0 8px;
+  }
+
+  /* 1. Explicitly make room for 2 rows in the grid structure */
+  .nav-links {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-rows: auto auto; /* Explicitly sets Row 1 for links, Row 2 for search */
+    gap: 8px;
+    width: 100%;
+  }
+
+  .nav-links a,
+  .btn-yellow.login-link,
+  .dropdown {
+    border-radius: 6px;
+    font-size: 0.86rem;
+    height: 40px;
+    justify-content: center;
+    min-width: 0;
+    padding: 0 8px;
+    text-align: center;
+    grid-row: 1; /* FORCES all 4 main items onto the very first row */
+  }
+
+  .nav-links a {
+    background-color: rgba(255, 255, 255, 0.06);
+  }
+
+  /* 2. Lock the Admin/Login button to the 4th column */
+  .dropdown, .btn-yellow.login-link {
+    grid-column: 4;
+  }
+
+  .nav-active {
+    border-bottom: 0;
+    outline: 2px solid var(--primary);
+  }
+
+  .dropdown .login-link {
+    width: 100%;
+  }
+
+  .dropdown-menu {
+    width: min(240px, calc(100vw - 24px));
+  }
+
+  /* 3. Drop the Search Bar cleanly to the second row underneath the buttons */
+  .nav-search {
+    grid-column: 1 / -1; /* Spans across all 4 columns */
+    grid-row: 2;         /* Explicitly locked to row number 2 */
+    flex: none;
+    height: 40px;
+    margin: 0;
+    border-radius: 6px;
+  }
+}
+
+@media (max-width: 460px) {
+  /* ... your existing styles ... */
+
+  .nav-links {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* 3. Adjust for the 2-column mobile layout */
+  .nav-links a:last-of-type, 
+  .nav-links .dropdown {
+    grid-column: auto; /* Let it flow naturally into slot 4 (Row 2, Col 2) */
+    grid-row: auto;
+  }
+
+  .nav-search {
+    grid-column: 1 / -1;
+    grid-row: 3; /* Pushes search bar cleanly to Row 3 */
+  }
+}

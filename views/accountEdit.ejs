@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="nl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rivals Track - Profiel Bewerken</title>
+    <%- include('partials/bootstrap') %>
+    <link rel="stylesheet" href="/css/account.css" />
+  </head>
+  <body>
+    <%- include('partials/navbar') %>
+
+    <main class="account-page">
+      <section class="account-panel">
+        <div class="account-heading">
+          <h1>Profiel Bewerken</h1>
+          <p><%= account.email %></p>
+        </div>
+
+        <% if (locals.error) { %>
+          <div class="account-alert account-alert-error"><%= error %></div>
+        <% } %>
+
+        <% if (locals.success) { %>
+          <div class="account-alert account-alert-success"><%= success %></div>
+        <% } %>
+
+        <form class="account-form" action="/account/edit" method="POST">
+          <h2>Account Gegevens</h2>
+
+          <div class="input-row">
+            <label for="username">Gebruikersnaam</label>
+            <input type="text" id="username" name="username" value="<%= account.username %>" required />
+          </div>
+
+          <div class="input-row">
+            <label for="email">E-mail</label>
+            <input type="email" id="email" name="email" value="<%= account.email %>" required />
+          </div>
+
+          <button type="submit" class="account-button">Wijzigingen Opslaan</button>
+        </form>
+
+        <form class="account-form" action="/account/password" method="POST">
+          <h2>Wachtwoord Resetten</h2>
+
+          <div class="input-row">
+            <label for="password">Nieuw Wachtwoord</label>
+            <input type="password" id="password" name="password" required />
+          </div>
+
+          <div class="input-row">
+            <label for="confirmPassword">Wachtwoord Bevestigen</label>
+            <input type="password" id="confirmPassword" name="confirmPassword" required />
+          </div>
+
+          <button type="submit" class="account-button">Wachtwoord Resetten</button>
+        </form>
+
+        <form class="account-form account-danger" action="/account/delete" method="POST" onsubmit="return confirm('Dit account permanent verwijderen?');">
+          <h2>Account Verwijderen</h2>
+          <p>Dit verwijdert je account en logt je onmiddellijk uit.</p>
+          <button type="submit" class="account-button danger-button">Account Verwijderen</button>
+        </form>
+      </section>
+    </main>
+    <%- include('partials/footer') %>
+  </body>
+</html>
