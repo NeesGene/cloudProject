@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="nl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Marvels Track</title>
+    <%- include('partials/bootstrap') %>
+    <link rel="stylesheet" href="./css/landing.css" />
+  </head>
+  <body>
+    <%- include('partials/navbar') %>
+    <header class="hero">
+      <h1>Marvels Track</h1>
+      <p class="subtitle">Al de Marvel Rivals statistieken beschikbaar.</p>
+      <p class="player-count" id="hero-count"></p>
+    </header>
+
+    <section class="intro-banner">
+      <div class="intro-inner">
+        <p class="intro-tag">Marvel Rivals</p>
+        <h2 class="intro-title">6v6 Hero Shooter</h2>
+        <p class="intro-desc">Marvel Rivals is een teamgebaseerde 6v6 hero shooter van NetEase Games. Kies uit tientallen Marvel-helden en -schurken, vorm een team en strijd in epische omgevingen. Rivals Track houdt al jouw statistieken, helden en nieuws op één plek bij.</p>
+      </div>
+    </section>
+
+    <main class="container">
+      <section class="card-grid">
+        <article
+          class="card card-grey"
+          onclick="location.href = 'stats'"
+          style="cursor: pointer"
+        >
+          <i class="bi bi-bar-chart-line-fill card-icon"></i>
+          <h2>Speler Statistieken</h2>
+          <div class="card-overlay">Statistieken</div>
+          <div class="card-overlay">Wins, losses & rank overzicht</div>
+          <div class="card-overlay">Meest gespeelde helden</div>
+        </article>
+
+        <article
+          class="card card-red-light"
+          onclick="location.href = 'heroes'"
+          style="cursor: pointer"
+        >
+          <i class="bi bi-shield-shaded card-icon"></i>
+          <h2>Helden Informatie</h2>
+          <div class="card-overlay">Bekijk de details van een held</div>
+          <div class="card-overlay">Stats, rollen & vaardigheden</div>
+          <div class="card-overlay">Volledig helden overzicht</div>
+        </article>
+
+        <article
+          class="card card-red-dark"
+          onclick="location.href = 'news'"
+          style="cursor: pointer"
+        >
+          <i class="bi bi-newspaper card-icon"></i>
+          <h2>Spel Nieuws</h2>
+          <div class="card-overlay">Nieuws over marvel rivals</div>
+          <div class="card-overlay">Laatste patch notes & updates</div>
+          <div class="card-overlay">Blijf op de hoogte van het spel</div>
+        </article>
+      </section>
+    </main>
+
+    <script src="../js/navbar.js"></script>
+    <script src="../js/landing.js"></script>
+    <%- include('partials/footer') %>
+  </body>
+</html>
