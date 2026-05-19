@@ -58,11 +58,43 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
+          script_stop: true
           script: |
-            cd ~/cloudProject
-            git pull origin main
-            docker compose pull webapp
-            docker compose up -d --remove-orphans
+            set -e
+            echo "Starting deployment..."
+            
+            # Verify we're in the right directory
+            cd ~/cloudProject || { echo "Failed to cd into ~/cloudProject"; exit 1; }
+            echo "✓ In directory: $(pwd)"
+            
+            # Pull latest code
+            echo "Pulling latest code from main..."
+            git pull origin main || { echo "Git pull failed"; exit 1; }
+            echo "✓ Git pull successful"
+            
+            # Log in to container registry on production server
+            echo "Logging into GHCR..."
+            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin || { echo "Docker login failed"; exit 1; }
+            echo "✓ GHCR login successful"
+            
+            # Force pull the latest image
+            echo "Pulling latest webapp image from GHCR..."
+            docker compose pull webapp || { echo "Docker pull failed"; exit 1; }
+            echo "✓ Image pull successful"
+            
+            # Start/restart containers
+            echo "Deploying containers..."
+            docker compose up -d --remove-orphans || { echo "Docker compose up failed"; exit 1; }
+            echo "✓ Containers deployed"
+            
+            # Verify deployment
+            echo "Verifying deployment..."
+            docker compose ps
+            echo "✓ Deployment verification complete"
+            
+            # Show recent logs
+            echo "Recent container logs:"
+            docker compose logs --tail=20 webapp || true
 
   # PHASE 3: Kill the temporary runner so you aren't billed for it
   stop-runner:
