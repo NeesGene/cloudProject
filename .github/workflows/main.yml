@@ -14,7 +14,7 @@ jobs:
     steps:
       - name: Create Hetzner Cloud Server
         id: start-hcloud-runner
-        uses: Cyclenerd/self-hosted-github-actions-runner-on-hetzner-cloud@v1.4.0
+        uses: cyclenerd/cloud-tools-container:latest
         with:
           mode: start
           github_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
@@ -71,7 +71,7 @@ jobs:
     if: always()
     steps:
       - name: Destroy Hetzner Cloud Server
-        uses: Cyclenerd/self-hosted-github-actions-runner-on-hetzner-cloud@v1.4.0
+        uses: cyclenerd/cloud-tools-container:latest
         with:
           mode: stop
           github_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
