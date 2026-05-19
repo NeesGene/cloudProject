@@ -1,31 +1,30 @@
-version: '3.8'
+name: Deploy to Hetzner
 
-services:
-  # Je SSR Web-app
-  webapp:
-    build: .
-    restart: always
-    labels:
-      caddy: "genenees.duckdns.org"
-      caddy.reverse_proxy: "{{upstreams 3000}}"
-    networks:
-      - caddy_net
+on:
+  push:
+    branches:
+      - main
 
-  # De Caddy Reverse Proxy
-  caddy:
-    image: lucaslorentz/caddy-docker-proxy:latest
-    restart: always
-    ports:
-      - 80:80
-      - 443:443
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - caddy_data:/data
-    networks:
-      - caddy_net
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
 
-networks:
-  caddy_net:
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
-volumes:
-  caddy_data:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
+          script: |
+            cd ~/cloudProject
+            
+            # Fetch the changes you just pushed to GitHub
+            git pull origin main
+            
+            # Safely rebuild the app. Caddy will stay online!
+            docker compose up -d --build --remove-orphans
