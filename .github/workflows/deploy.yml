@@ -15,17 +15,29 @@ jobs:
         uses: actions/checkout@v4
       
       - name: Deploy to Hetzner server
+        env:
+          SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_HOST: ${{ secrets.HETZNER_HOST }}
+          SSH_USER: ${{ secrets.HETZNER_USERNAME }}
         run: |
-          # 1. Prepare the local SSH environment inside the runner
+          # 1. Prepare local SSH environment
           mkdir -p ~/.ssh
           chmod 700 ~/.ssh
           
-          # 2. Write the private key into a secure temporary file
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
+          # 2. Write private key
+          echo "$SSH_KEY" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
           
-          # 3. Connect and execute commands using the native OpenSSH client
-          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no ${{ secrets.HETZNER_USERNAME }}@${{ secrets.HETZNER_HOST }} << 'EOF'
+          # 3. Clean up variables
+          CLEAN_HOST=$(echo "$SSH_HOST" | tr -d '\r\n ')
+          CLEAN_USER=$(echo "$SSH_USER" | tr -d '\r\n ')
+          
+          # 4. Connect using Native SSH with compatibility overrides
+          ssh -i ~/.ssh/deploy_key \
+              -o StrictHostKeyChecking=no \
+              -o PubkeyAcceptedKeyTypes=+ssh-rsa \
+              -o HostKeyAlgorithms=+ssh-rsa \
+              "${CLEAN_USER}@${CLEAN_HOST}" << 'EOF'
             cd ${{ secrets.PROJECT_PATH }}
             git pull origin main
             docker-compose down
