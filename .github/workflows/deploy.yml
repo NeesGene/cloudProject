@@ -18,7 +18,7 @@ jobs:
         env:
           SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           SSH_HOST: ${{ secrets.HETZNER_HOST }}
-          SSH_USER: ${{ secrets.HETZNER_USERNAME }}
+          SSH_USER: ${{ secrets.HETZNER_USER }}
         run: |
           # 1. Prepare local SSH environment
           mkdir -p ~/.ssh
