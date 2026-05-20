@@ -1,13 +1,12 @@
-version: '3.8'
-
 services:
   webapp:
-    # Change username and repository-name to your actual GitHub info (lowercase!)
-    image: ghcr.io/your-github-username/your-repository-name:latest
+    image: ghcr.io/neesgene/cloudproject:${IMAGE_TAG:-latest}
     restart: always
+    ports:
+      - "3000:3000"
     labels:
       caddy: "genenees.duckdns.org"
-      caddy.reverse_proxy: "{{upstreams 3000}}"
+      caddy.reverse_proxy: "{{upstreams}}"
     networks:
       - caddy_net
 
@@ -15,8 +14,10 @@ services:
     image: lucaslorentz/caddy-docker-proxy:latest
     restart: always
     ports:
-      - 80:80
-      - 443:443
+      - "80:80"
+      - "443:443"
+    environment:
+      - CADDY_INGRESS_NETWORKS=caddy_net
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - caddy_data:/data
@@ -25,6 +26,7 @@ services:
 
 networks:
   caddy_net:
+    name: caddy_net
 
 volumes:
   caddy_data:
